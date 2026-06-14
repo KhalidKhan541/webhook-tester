@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Tester - Test & Debug Webhooks Instantly</title>
+    <meta name="description" content="Test webhooks instantly with Webhook Tester. Free online tool with HTTP methods, JSON editor, request history, cURL import, and response time charts.">
+    <meta name="keywords" content="webhook tester, webhook test, API tester, HTTP request tester, API testing tool, REST client, webhook debugging">
+    <meta name="author" content="Webhook Tester">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Webhook Tester - Free Online Webhook Testing Tool">
+    <meta property="og:description" content="Test webhooks instantly. Free online tool with HTTP methods, JSON editor, and request history.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://webhook-tester-1wa.pages.dev">
+    <meta property="og:image" content="https://webhook-tester-1wa.pages.dev/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Webhook Tester - Free Online Webhook Testing Tool">
+    <meta name="twitter:description" content="Test webhooks instantly. Free online tool with HTTP methods and JSON editor.">
+    <link rel="canonical" href="https://webhook-tester-1wa.pages.dev">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8007430228126096" crossorigin="anonymous"></script>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>Webhook Tester</h1>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-tab="tester">Tester</button>
+                <button class="nav-btn" data-tab="history">History</button>
+                <button class="nav-btn" data-tab="templates">Templates</button>
+            </nav>
+            <div class="header-actions">
+                <button class="btn btn-outline" id="importCurlBtn">Import cURL</button>
+                <button class="btn btn-primary" id="generateUrlBtn">Generate URL</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main container">
+        <!-- Tester Tab -->
+        <section class="tab-content active" id="tester-tab">
+            <div class="webhook-url-section">
+                <label class="label">Your Webhook URL</label>
+                <div class="url-display">
+                    <code id="webhookUrl">Click "Generate URL" to create your endpoint</code>
+                    <button class="btn btn-icon" id="copyUrlBtn" title="Copy URL">📋</button>
+                </div>
+            </div>
+
+            <div class="request-builder">
+                <div class="request-row">
+                    <select id="httpMethod" class="select method-select">
+                        <option value="GET">GET</option>
+                        <option value="POST" selected>POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                        <option value="PATCH">PATCH</option>
+                    </select>
+                    <input type="text" id="requestUrl" class="input" placeholder="https://api.example.com/webhook" value="https://httpbin.org/post">
+                    <button class="btn btn-primary btn-lg" id="sendBtn">
+                        <span class="btn-text">Send</span>
+                        <span class="btn-loading" style="display:none;">Sending...</span>
+                    </button>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" data-panel="body">Body</button>
+                    <button class="tab-btn" data-panel="headers">Headers</button>
+                    <button class="tab-btn" data-panel="params">Params</button>
+                </div>
+
+                <div class="tab-panel active" id="body-panel">
+                    <div class="editor-toolbar">
+                        <select id="bodyType" class="select select-sm">
+                            <option value="json">JSON</option>
+                            <option value="text">Text</option>
+                            <option value="xml">XML</option>
+                            <option value="form">Form Data</option>
+                        </select>
+                        <button class="btn btn-sm" id="formatJsonBtn">Format JSON</button>
+                        <button class="btn btn-sm" id="exportCurlBtn">Export cURL</button>
+                    </div>
+                    <textarea id="requestBody" class="code-editor" placeholder='{"key": "value"}'></textarea>
+                </div>
+
+                <div class="tab-panel" id="headers-panel">
+                    <div class="kv-editor" id="headersEditor">
+                        <div class="kv-row">
+                            <input type="text" class="input kv-key" placeholder="Header name">
+                            <input type="text" class="input kv-value" placeholder="Value">
+                            <button class="btn btn-icon btn-sm kv-remove">✕</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline" id="addHeaderBtn">+ Add Header</button>
+                </div>
+
+                <div class="tab-panel" id="params-panel">
+                    <div class="kv-editor" id="paramsEditor">
+                        <div class="kv-row">
+                            <input type="text" class="input kv-key" placeholder="Parameter name">
+                            <input type="text" class="input kv-value" placeholder="Value">
+                            <button class="btn btn-icon btn-sm kv-remove">✕</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline" id="addParamBtn">+ Add Parameter</button>
+                </div>
+            </div>
+
+            <!-- Auto Repeat Section -->
+            <div class="auto-repeat-section">
+                <label class="toggle-label">
+                    <input type="checkbox" id="autoRepeatToggle">
+                    <span class="toggle-slider"></span>
+                    Auto-Repeat / Test Mode
+                </label>
+                <div class="repeat-options" id="repeatOptions" style="display:none;">
+                    <label>Interval (ms):</label>
+                    <input type="number" id="repeatInterval" class="input input-sm" value="1000" min="100">
+                    <label>Count:</label>
+                    <input type="number" id="repeatCount" class="input input-sm" value="10" min="1">
+                    <button class="btn btn-sm btn-primary" id="startRepeatBtn">Start</button>
+                    <button class="btn btn-sm btn-danger" id="stopRepeatBtn" style="display:none;">Stop</button>
+                    <span class="repeat-status" id="repeatStatus"></span>
+                </div>
+            </div>
+
+            <!-- Response Section -->
+            <div class="response-section" id="responseSection" style="display:none;">
+                <div class="response-header">
+                    <h3>Response</h3>
+                    <div class="response-meta">
+                        <span class="status-badge" id="responseStatus">200 OK</span>
+                        <span class="meta-item" id="responseTime">0ms</span>
+                        <span class="meta-item" id="responseSize">0 B</span>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" data-panel="res-body">Body</button>
+                    <button class="tab-btn" data-panel="res-headers">Headers</button>
+                    <button class="tab-btn" data-panel="res-chart">Chart</button>
+                    <button class="tab-btn" data-panel="res-compare">Compare</button>
+                </div>
+
+                <div class="tab-panel active" id="res-body-panel">
+                    <pre class="response-body" id="responseBody"></pre>
+                </div>
+
+                <div class="tab-panel" id="res-headers-panel">
+                    <div class="response-headers" id="responseHeaders"></div>
+                </div>
+
+                <div class="tab-panel" id="res-chart-panel">
+                    <canvas id="responseChart" width="800" height="200"></canvas>
+                    <div class="chart-stats" id="chartStats"></div>
+                </div>
+
+                <div class="tab-panel" id="res-compare-panel">
+                    <div class="compare-container">
+                        <div class="compare-side">
+                            <h4>Request</h4>
+                            <pre class="code-editor" id="compareRequest"></pre>
+                        </div>
+                        <div class="compare-side">
+                            <h4>Response</h4>
+                            <pre class="code-editor" id="compareResponse"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Tab -->
+        <section class="tab-content" id="history-tab">
+            <div class="history-header">
+                <h3>Request History</h3>
+                <div class="history-actions">
+                    <button class="btn btn-sm btn-outline" id="exportHistoryBtn">Export All</button>
+                    <button class="btn btn-sm btn-danger" id="clearHistoryBtn">Clear History</button>
+                </div>
+            </div>
+            <div class="history-list" id="historyList">
+                <p class="empty-state">No requests yet. Start testing!</p>
+            </div>
+        </section>
+
+        <!-- Templates Tab -->
+        <section class="tab-content" id="templates-tab">
+            <div class="templates-header">
+                <h3>Saved Templates</h3>
+                <button class="btn btn-sm btn-primary" id="saveTemplateBtn">Save Current Request</button>
+            </div>
+            <div class="templates-list" id="templatesList">
+                <p class="empty-state">No templates saved. Build a request and save it!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Import cURL Modal -->
+    <div class="modal" id="curlModal" style="display:none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import cURL Command</h3>
+                <button class="btn btn-icon modal-close">✕</button>
+            </div>
+            <textarea id="curlInput" class="code-editor" rows="8" placeholder="Paste your cURL command here..."></textarea>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close">Cancel</button>
+                <button class="btn btn-primary" id="parseCurlBtn">Import</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Template Modal -->
+    <div class="modal" id="templateModal" style="display:none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Save Request Template</h3>
+                <button class="btn btn-icon modal-close">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="label">Template Name</label>
+                <input type="text" id="templateName" class="input" placeholder="My API Test">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close">Cancel</button>
+                <button class="btn btn-primary" id="confirmSaveTemplateBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Webhook Tester - Debug APIs with ease</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

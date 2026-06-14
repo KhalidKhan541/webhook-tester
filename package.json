@@ -1,0 +1,13 @@
+{
+  "name": "webhook-tester",
+  "version": "1.0.0",
+  "description": "Free online webhook tester - Generate unique URLs, send requests, and inspect responses",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public --project-name webhook-tester",
+    "build": "echo 'Static site - no build required'"
+  },
+  "keywords": ["webhook", "tester", "api", "debug", "http", "cloudflare", "pages"],
+  "license": "MIT"
+}

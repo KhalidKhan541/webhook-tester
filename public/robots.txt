@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://webhook-tester-1wa.pages.dev/sitemap.xml
